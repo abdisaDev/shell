@@ -1,26 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
-int main(int argc, char **argv)
+int main(void)
 {
-    int counter, i = 0;
-    char *command = argv[1];
-    char * arg_vals[argc];
+    int  counter = 1;
+    char string[sizeof(char) * 200];
+    char * arg_vals [sizeof(string)];
+    char *command;
     int status_code;
 
-    for (counter = 1; counter < argc; counter++, i++)
-    {
-        arg_vals[i] = argv[counter];
-    }
+    
+    printf("($): ");
+    fgets(string,  3000, stdin);
 
-    status_code = execvp(command, arg_vals);
-
-    if (status_code == -1)
+    command  = strtok(string, " ");
+    arg_vals[0] = command;
+    
+    while(command != NULL)
     {
-        printf("Invalid Parameter");
-        exit (1);
+        command = strtok(NULL, " ");
+        arg_vals[counter] = command;
+        counter++;
     }
+    
+   
+    status_code = execvp(arg_vals[0], arg_vals);
+
+   if(status_code == -1)
+   {
+    printf("Invalid Command!");
+    exit(1);
+   }
     
     return (0);
 }
